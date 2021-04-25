@@ -24,8 +24,10 @@ board.on("ready", () => {
         return;
       }
 
+      let rate = '';
+      let bits = '';
+
       let match = data.match(/Momentary freq = ([0-9]+) Hz/);
-      let rate = "mopi";
       if (match && match.length > 1) {
         rate = match[1];
         rate = rate / 1000;
@@ -34,12 +36,25 @@ board.on("ready", () => {
         rate = rate.toString() + "kHz";
       }
 
-      if (screen != rate) {
+      if (rate) {
+		  let regexp = new RegExp( 'Altset ' + altset[1] + '.+?Bits: ([0-9]+)', 's');
+		  match = data.match(regexp);
+		  if (match && match.length > 1) {
+		  bits = match[1] + 'bits';
+		  }
+      }
+
+      let newScreen = 'mopi';
+      if (rate) {
+         newScreen = rate + '\n' + bits;
+      }
+	  
+      if (screen != newScreen) {
         oled.clearDisplay();
         oled.setCursor(1, 1);
-        oled.writeString(font, 2, rate, 1, true, 2);
+        oled.writeString(font, 2, newScreen, 1, true, 2);
         oled.update();
-        screen = rate;
+        screen = newScreen;
       }
       setTimeout(update, interval);
     });
