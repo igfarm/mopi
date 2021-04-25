@@ -37,22 +37,26 @@ board.on("ready", () => {
       }
 
       if (rate) {
+	          let altset = data.match(/Altset = ([0-9]+)/);
+
 		  let regexp = new RegExp( 'Altset ' + altset[1] + '.+?Bits: ([0-9]+)', 's');
 		  match = data.match(regexp);
 		  if (match && match.length > 1) {
-		  bits = match[1] + 'bits';
+		  bits = match[1] + 'bit';
 		  }
       }
 
       let newScreen = 'mopi';
       if (rate) {
-         newScreen = rate + '\n' + bits;
+         newScreen = rate;
       }
 	  
       if (screen != newScreen) {
         oled.clearDisplay();
         oled.setCursor(1, 1);
         oled.writeString(font, 2, newScreen, 1, true, 2);
+        oled.setCursor(1, 20);
+        oled.writeString(font, 1, bits, 1, true, 2);
         oled.update();
         screen = newScreen;
       }
