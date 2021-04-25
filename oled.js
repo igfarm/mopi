@@ -13,6 +13,7 @@ board.on('ready', () => {
     address: 0x3c
   };
 
+	let screen = "--";
 	const interval = 1000;
   const oled = new Oled(board, five, opts);
 
@@ -25,7 +26,7 @@ fs.readFile('/proc/asound/card0/stream0', 'utf8' , (err, data) => {
   }
 
  let match = data.match(/Momentary freq = ([0-9]+) Hz/);
-	let rate = "--";
+	let rate = "MOPI";
 	if (match && match.length > 1) {
 	rate = match[1];
 	rate = rate / 1000;
@@ -34,10 +35,13 @@ fs.readFile('/proc/asound/card0/stream0', 'utf8' , (err, data) => {
 	rate = rate.toString() + "kHz";
 	}
 
+	if (screen != rate) {
   oled.clearDisplay();
   oled.setCursor(1, 1);
   oled.writeString(font, 2, rate, 1, true, 2);
   oled.update();
+		screen = rate;
+	}
    setTimeout(update, interval);
 })
 
