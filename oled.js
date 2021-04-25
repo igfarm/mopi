@@ -25,7 +25,7 @@ board.on("ready", () => {
       }
 
       let match = data.match(/Momentary freq = ([0-9]+) Hz/);
-      let rate = "MOPI";
+      let rate = "mopi";
       if (match && match.length > 1) {
         rate = match[1];
         rate = rate / 1000;
