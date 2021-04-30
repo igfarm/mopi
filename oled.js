@@ -16,6 +16,7 @@ board.on("ready", () => {
   let screen = "--";
   const interval = 1000;
   const oled = new Oled(board, five, opts);
+  oled.dimDisplay(true);
 
   function update() {
     fs.readFile("/proc/asound/card0/stream0", "utf8", (err, data) => {
@@ -55,7 +56,7 @@ board.on("ready", () => {
       }
 
       if (screen != newScreen) {
-        oled.clearDisplay();
+        oled.clearDisplay(false);
         if (newScreen === "mopi") {
           logo(oled);
         } else {
@@ -75,21 +76,20 @@ board.on("ready", () => {
     // Logo
     let lw = 30;
     let lh = 20;
-    let lx = 2;
+    let lx = 0;
     let ly = 6;
     oled.fillRect(lx, ly, lw, lh, 1);
     oled.fillRect(lx + 2, ly + 2, lw - 4, lh - 4, 0);
     oled.fillRect(lx + 8, ly + 8, lw - 16, lh - 16, 1);
 
     // Letters
-    let x = 10;
+    let x = 50;
     let y = 12;
     const h = 8;
     const w = 14;
     const s = 8;
 
     // M
-    x += 40;
     oled.drawLine(x, y, x, y + h);
     oled.drawLine(x + w / 2, y, x + w / 2, y + h);
     oled.drawLine(x + w, y, x + w, y + h);
