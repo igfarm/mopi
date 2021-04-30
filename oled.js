@@ -24,8 +24,8 @@ board.on("ready", () => {
         return;
       }
 
-      let rate = '';
-      let bits = '';
+      let rate = "";
+      let bits = "";
 
       let match = data.match(/Momentary freq = ([0-9]+) Hz/);
       if (match && match.length > 1) {
@@ -37,30 +37,33 @@ board.on("ready", () => {
       }
 
       if (rate) {
-	          let altset = data.match(/Altset = ([0-9]+)/);
+        let altset = data.match(/Altset = ([0-9]+)/);
 
-		  let regexp = new RegExp( 'Altset ' + altset[1] + '.+?Bits: ([0-9]+)', 's');
-		  match = data.match(regexp);
-		  if (match && match.length > 1) {
-		  bits = match[1] + 'bit';
-		  }
+        let regexp = new RegExp(
+          "Altset " + altset[1] + ".+?Bits: ([0-9]+)",
+          "s"
+        );
+        match = data.match(regexp);
+        if (match && match.length > 1) {
+          bits = match[1] + "bit";
+        }
       }
 
-      let newScreen = 'mopi';
+      let newScreen = "mopi";
       if (rate) {
-         newScreen = rate;
+        newScreen = rate;
       }
-	  
+
       if (screen != newScreen) {
         oled.clearDisplay();
-        if (newScreen === 'mopi')
-	     { logo(oled); } 
-	      else {
-        oled.setCursor(1, 1);
-        oled.writeString(font, 2, newScreen, 1, true, 2);
-        oled.setCursor(1, 20);
-        oled.writeString(font, 1, bits, 1, true, 2);
-	      }
+        if (newScreen === "mopi") {
+          logo(oled);
+        } else {
+          oled.setCursor(1, 1);
+          oled.writeString(font, 2, newScreen, 1, true, 2);
+          oled.setCursor(1, 20);
+          oled.writeString(font, 1, bits, 1, true, 2);
+        }
         oled.update();
         screen = newScreen;
       }
@@ -69,44 +72,50 @@ board.on("ready", () => {
   }
 
   function logo(oled) {
-	const h = 8;
-	  const w = 14;
-	  const s = 8;
-	let x = 10;
-	  let y=12;
+    // Logo
+    let lw = 30;
+    let lh = 20;
+    let lx = 2;
+    let ly = 6;
+    oled.fillRect(lx, ly, lw, lh, 1);
+    oled.fillRect(lx + 2, ly + 2, lw - 4, lh - 4, 0);
+    oled.fillRect(lx + 8, ly + 8, lw - 16, lh - 16, 1);
 
+    // Letters
+    let x = 10;
+    let y = 12;
+    const h = 8;
+    const w = 14;
+    const s = 8;
 
-	  let lw = 30;
-	  let lh = 20;
-	  let lx = 2;
-	  let ly = 6;
-	  oled.fillRect(lx, ly, lw, lh, 1);
-	  oled.fillRect(lx+2, ly+2, lw-4, lh-4, 0);
-	  oled.fillRect(lx+8, ly+8, lw-16, lh-16, 1);
-	  x += 40;
+    // M
+    x += 40;
+    oled.drawLine(x, y, x, y + h);
+    oled.drawLine(x + w / 2, y, x + w / 2, y + h);
+    oled.drawLine(x + w, y, x + w, y + h);
+    oled.drawLine(x, y, x + w, y);
 
-	oled.drawLine(x, y, x, y+h);
-	oled.drawLine(x+w/2, y, x + w/2, y+h);
-	oled.drawLine(x+w, y, x+w, y+h);
-	oled.drawLine(x, y, x+w, y);
+    // O
+    x += w + s;
 
-	  x += w + s;
+    oled.drawLine(x, y, x, y + h);
+    oled.drawLine(x, y, x + w, y);
+    oled.drawLine(x, y + h, x + w, y + h);
+    oled.drawLine(x + w, y, x + w, y + h);
 
-	oled.drawLine(x, y, x, y+h);
-	oled.drawLine(x, y, x+w, y);
-	oled.drawLine(x, y+h, x+w, y+h);
-	oled.drawLine(x+w, y, x+w, y+h);
+    // P
+    x += w + s;
+    oled.drawLine(x, y, x, y + h);
+    oled.drawLine(x, y, x + w - 1, y);
+    oled.drawLine(x, y + h / 2, x + w, y + h / 2);
+    oled.drawLine(x + w, y + 1, x + w, y + h / 2);
 
-	  x += w + s;
-	oled.drawLine(x, y, x, y+h);
-	oled.drawLine(x, y, x+w - 1, y);
-	oled.drawLine(x, y+h/2, x+w, y+h/2);
-	oled.drawLine(x+w, y+1, x+w, y+h/2);
-	  x += w + s;
-
-
-	oled.drawLine(x, y, x, y+h);
+    //P
+    x += w + s;
+    oled.drawLine(x, y, x, y + h);
   }
-	
+
   update();
 });
+
+
