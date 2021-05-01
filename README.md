@@ -1,5 +1,12 @@
 
 
+# I2C OLED Screen Updater for Mopi
+
+A small script that 
+
+## Installation
+
+Start with the roopiee distro, which is based on Arch Linux Arm distro. Once that is installed do the following:
 
 ### Log in as root
 
