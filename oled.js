@@ -4,6 +4,7 @@ const five = require("johnny-five");
 const font = require("oled-font-5x7");
 const Oled = require("oled-js");
 const Raspi = require("raspi-io").RaspiIO;
+
 const board = new five.Board({ io: new Raspi() });
 board.on("ready", () => {
   console.log("Connected to Raspberry, ready.");
@@ -13,12 +14,17 @@ board.on("ready", () => {
     address: 0x3c,
   };
 
-  let screen = "--";
-  const interval = 1000;
+  // how often to check for changes in usb stream file
+  const interval = 1000; 
+
+  // Create a screen
   const oled = new Oled(board, five, opts);
   oled.dimDisplay(true);
+  let screen = "--";
 
+  // Update function
   function update() {
+    // Read the file
     fs.readFile("/proc/asound/card0/stream0", "utf8", (err, data) => {
       if (err) {
         console.error(err);
@@ -28,6 +34,7 @@ board.on("ready", () => {
       let rate = "";
       let bits = "";
 
+      // Get the current streaming rate frequency
       let match = data.match(/Momentary freq = ([0-9]+) Hz/);
       if (match && match.length > 1) {
         rate = match[1];
@@ -38,8 +45,10 @@ board.on("ready", () => {
       }
 
       if (rate) {
+        // Look for the Altset enabled
         let altset = data.match(/Altset = ([0-9]+)/);
 
+        // Look for the bit depth for this Altset
         let regexp = new RegExp(
           "Altset " + altset[1] + ".+?Bits: ([0-9]+)",
           "s"
@@ -50,28 +59,32 @@ board.on("ready", () => {
         }
       }
 
-      let newScreen = "mopi";
-      if (rate) {
-        newScreen = rate;
-      }
+      // Get the new screen
+      let newScreen = rate ? rate : "logo";
 
+      // Only update on change
       if (screen != newScreen) {
         oled.clearDisplay(false);
-        if (newScreen === "mopi") {
+        if (newScreen === "logo") {
+          // Draw the logo
           logo(oled);
         } else {
+          // Draw the frequency and rate
           oled.setCursor(1, 1);
           oled.writeString(font, 2, newScreen, 1, true, 2);
           oled.setCursor(1, 20);
           oled.writeString(font, 1, bits, 1, true, 2);
         }
+        // Update the screen
         oled.update();
         screen = newScreen;
       }
+      // Schedule next update
       setTimeout(update, interval);
     });
   }
 
+  // This draws a nice logo on the screen
   function logo(oled) {
     // Logo
     let lw = 30;
@@ -97,7 +110,6 @@ board.on("ready", () => {
 
     // O
     x += w + s;
-
     oled.drawLine(x, y, x, y + h);
     oled.drawLine(x, y, x + w, y);
     oled.drawLine(x, y + h, x + w, y + h);
@@ -110,7 +122,7 @@ board.on("ready", () => {
     oled.drawLine(x, y + h / 2, x + w, y + h / 2);
     oled.drawLine(x + w, y + 1, x + w, y + h / 2);
 
-    //P
+    // I
     x += w + s;
     oled.drawLine(x, y, x, y + h);
   }
