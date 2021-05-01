@@ -1,21 +1,21 @@
-install aur
+## install aur
 
 
-  226  bash <(curl -s archibold.io/install/aur)
+  bash <(curl -s archibold.io/install/aur)
 
 
-create user
+## create user
 
-add user to sudo
+  add user to sudo
 
-install pigpio-git
+## install pigpio-git
 
-   16  AUR_NO_SUDO=1 aur pigpio-git
+   AUR_NO_SUDO=1 aur pigpio-git
 
-install node app
+## install node app
 
-   18  npm install raspi-io
-   47  npm install johnny-five oled-js oled-font-5x7
-   49  node test.js 
+   npm install raspi-io
+   npm install johnny-five oled-js oled-font-5x7
+   node test.js 
 
 
