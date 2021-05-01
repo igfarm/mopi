@@ -1,21 +1,30 @@
-## install aur
 
 
-    bash <(curl -s archibold.io/install/aur)
 
+### Log in as root
 
-## create user
+    ssh root@<ip>
 
-    add user to sudo
+    # install toosl we will need
+    pacman -S sudo make gcc
 
-## install pigpio-git
+    # add user
+    export USER=jaime
+    useradd -m $USER
+    passwd $USER
 
-     AUR_NO_SUDO=1 aur pigpio-git
+    # add user to sudoers
+    export EDITOR='tee -a'
+    echo "$USER ALL=(ALL:ALL) ALL" | visudo
+    exit
 
-## install node app
+### Log back in as user
 
-     npm install raspi-io
-     npm install johnny-five oled-js oled-font-5x7
-     node test.js 
+    ssh jaime@<ip>
 
+    # install pigpio
+    bash < (curl -s https://archibold.io/install/aur)
+    aur pigpio-git
 
+    # install node packages
+    npm install raspi-io johnny-five oled-js oled-font-5x7
